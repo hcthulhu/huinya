@@ -6,6 +6,8 @@
 #include <string.h>
 #include <math.h>
 
+//roma loh
+
 const float G = 124707.658145, T = 0.000001, PI = 3.14159265358979323846;
 const char TAIL = '.';
 
