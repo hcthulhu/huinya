@@ -6,8 +6,6 @@
 #include <string.h>
 #include <math.h>
 
-//roma loh
-
 const float G = 124707.658145, T = 0.000001, PI = 3.14159265358979323846;
 const char TAIL = '.';
 
@@ -23,107 +21,107 @@ void PrintState (planet* p, char* screen, int w, int h, char c) ;
 
 
 int main () {
-  struct winsize win;
-  ioctl (STDOUT_FILENO, TIOCGWINSZ, &win);
-  int h = win.ws_row;
-  int w = win.ws_col;
-  char* screen = (char*) calloc ( w * (h - 1) + 1, sizeof(char));
+    struct winsize win;
+    ioctl (STDOUT_FILENO, TIOCGWINSZ, &win);
+    int h = win.ws_row;
+    int w = win.ws_col;
+    char* screen = (char*) calloc ( w * (h - 1) + 1, sizeof(char));
 
-  planet p1 = {70, 20, 600, 0, 100, 'O'};
-  planet p2 = {70 + 30*tan(PI/6), 50, -300, 600*cos(PI/6), 100, 'o'};
-  planet p3 = {70 - 30*tan(PI/6), 50, -300, -600*cos(PI/6), 100, '*'};
+    planet p1 = {70, 20, 600, 0, 100, 'O'};
+    planet p2 = {70 + 30*tan(PI/6), 50, -300, 600*cos(PI/6), 100, 'o'};
+    planet p3 = {70 - 30*tan(PI/6), 50, -300, -600*cos(PI/6), 100, '*'};
 
-  // planet p1 = {120, 40, 0, 3000, 1200, 'O'};
-  // planet p2 = {130, 40, 0, -1970, 1000, 'o'};
-  // planet p3 = {125, 40, -4000, 0, 1500, '*'};
-  planet c = {0, 0, 0, 0, 0, 'X'};
+    // planet p1 = {120, 40, 0, 3000, 1200, 'O'};
+    // planet p2 = {130, 40, 0, -1970, 1000, 'o'};
+    // planet p3 = {125, 40, -4000, 0, 1500, '*'};
+    planet c = {0, 0, 0, 0, 0, 'X'};
 
-  for (int i = 0; i < w * (h); i++)
+    for (int i = 0; i < w * (h); i++)
     screen[i] = ' ';
-  screen[w * (h - 1)] = '\0';
-  printf("\n");
+    screen[w * (h - 1)] = '\0';
+    printf("\n");
 
-  for (int i = 0; ; i++) {
+    for (int i = 0; ; i++) {
 
-    //Calc2 (&p1, &p2, screen, w);
-    Calc3 (&p1, &p2, &p3, screen, w, h);
-    CalcCenter (p1, p2, p3, &c, screen, w, h);
-    PrintState (&p1, screen, w, h, p1.dig);
-    PrintState (&p2, screen, w, h, p2.dig);
-    PrintState (&p3, screen, w, h, p3.dig);
-    PrintState (&c, screen, w, h, c.dig);
+        //Calc2 (&p1, &p2, screen, w);
+        Calc3 (&p1, &p2, &p3, screen, w, h);
+        CalcCenter (p1, p2, p3, &c, screen, w, h);
+        PrintState (&p1, screen, w, h, p1.dig);
+        PrintState (&p2, screen, w, h, p2.dig);
+        PrintState (&p3, screen, w, h, p3.dig);
+        PrintState (&c, screen, w, h, c.dig);
 
-    if (i % (int)(1 / (1000 * T)) == 0) {
-        puts (screen);
-        // printf("1: x:%lg y:%lg vx:%lg vy:%lg \n", p1.x, p1.y, p1.vx, p1.vy );
-        // printf("2: x:%lg y:%lg vx:%lg vy:%lg \n", p2.x, p2.y, p2.vx, p2.vy );
-        // printf("3: x:%lg y:%lg vx:%lg vy:%lg \n", p3.x, p3.y, p3.vx, p3.vy );
-        usleep (50000);
+        if (i % (int)(1 / (1000 * T)) == 0) {
+            puts (screen);
+            // printf("1: x:%lg y:%lg vx:%lg vy:%lg \n", p1.x, p1.y, p1.vx, p1.vy );
+            // printf("2: x:%lg y:%lg vx:%lg vy:%lg \n", p2.x, p2.y, p2.vx, p2.vy );
+            // printf("3: x:%lg y:%lg vx:%lg vy:%lg \n", p3.x, p3.y, p3.vx, p3.vy );
+            usleep (50000);
 
     }
     //write (1, screen, w * (h - 1) + 1);
 
 
     //printf("%d",i);
-  }
-  return 0;
+    }
+    return 0;
 }
 
 void Calc3 (planet* p1, planet* p2, planet* p3, char* screen, int w, int h) {
-  PrintState (p2, screen, w, h, TAIL);
-  PrintState (p1, screen, w, h, TAIL);
-  PrintState (p3, screen, w, h, TAIL);
-  float rr12 = (p2->x - p1->x) * (p2->x - p1->x) + (p2->y - p1->y) * (p2->y - p1->y);
-  float rr13 = (p3->x - p1->x) * (p3->x - p1->x) + (p3->y - p1->y) * (p3->y - p1->y);
-  float rr32 = (p2->x - p3->x) * (p2->x - p3->x) + (p2->y - p3->y) * (p2->y - p3->y);
-  float F12 = (G * p1->m * p2->m) /(rr12);
-  float F13 = (G * p1->m * p3->m) /(rr13);
-  float F32 = (G * p3->m * p2->m) /(rr32);
-  //float F = (G * p1->m * p2->m) / (fabs(p1->vx) + fabs(p2->vx));
-  float cosx12 = (p2->x - p1->x) / sqrt(rr12);
-  float cosx13 = (p3->x - p1->x) / sqrt(rr13);
-  float cosx32 = (p3->x - p2->x) / sqrt(rr32);
-  float cosy12 = (p2->y - p1->y) / sqrt(rr12);
-  float cosy13 = (p3->y - p1->y) / sqrt(rr13);
-  float cosy32 = (p3->y - p2->y) / sqrt(rr32);
-  p1->vx += ((+F12 * cosx12 + F13 * cosx13) / fabs(p1->m)) * T;
-  p2->vx += ((-F12 * cosx12 + F32 * cosx32) / fabs(p2->m)) * T;
-  p1->vy += ((+F12 * cosy12 + F13 * cosy13) / fabs(p1->m)) * T;
-  p2->vy += ((-F12 * cosy12 + F32 * cosy32) / fabs(p2->m)) * T;
-  p3->vx += ((-F32 * cosx32 - F13 * cosx13) / fabs(p3->m)) * T;
-  p3->vy += ((-F32 * cosy32 - F13 * cosy13) / fabs(p3->m)) * T;
-  p1->x += p1->vx * T;
-  p2->x += p2->vx * T;
-  p1->y += p1->vy * T;
-  p2->y += p2->vy * T;
-  p3->x += p3->vx * T;
-  p3->y += p3->vy * T;
-  //printf("1: %lg %lg",cos, sin (acos (cos)) );
-  //printf("1: x:%lg y:%lg vx:%lg vy:%lg ",F32 * cosx32, F13 * cosy13,F12 * cosy12, -F12 * cosy12 );
-  // printf("2: x:%lg y:%lg vx:%lg vy:%lg ", p2->x, p2->y, p2->vx, p2->vy );
+    PrintState (p2, screen, w, h, TAIL);
+    PrintState (p1, screen, w, h, TAIL);
+    PrintState (p3, screen, w, h, TAIL);
+    float rr12 = (p2->x - p1->x) * (p2->x - p1->x) + (p2->y - p1->y) * (p2->y - p1->y);
+    float rr13 = (p3->x - p1->x) * (p3->x - p1->x) + (p3->y - p1->y) * (p3->y - p1->y);
+    float rr32 = (p2->x - p3->x) * (p2->x - p3->x) + (p2->y - p3->y) * (p2->y - p3->y);
+    float F12 = (G * p1->m * p2->m) /(rr12);
+    float F13 = (G * p1->m * p3->m) /(rr13);
+    float F32 = (G * p3->m * p2->m) /(rr32);
+    //float F = (G * p1->m * p2->m) / (fabs(p1->vx) + fabs(p2->vx));
+    float cosx12 = (p2->x - p1->x) / sqrt(rr12);
+    float cosx13 = (p3->x - p1->x) / sqrt(rr13);
+    float cosx32 = (p3->x - p2->x) / sqrt(rr32);
+    float cosy12 = (p2->y - p1->y) / sqrt(rr12);
+    float cosy13 = (p3->y - p1->y) / sqrt(rr13);
+    float cosy32 = (p3->y - p2->y) / sqrt(rr32);
+    p1->vx += ((+F12 * cosx12 + F13 * cosx13) / fabs(p1->m)) * T;
+    p2->vx += ((-F12 * cosx12 + F32 * cosx32) / fabs(p2->m)) * T;
+    p1->vy += ((+F12 * cosy12 + F13 * cosy13) / fabs(p1->m)) * T;
+    p2->vy += ((-F12 * cosy12 + F32 * cosy32) / fabs(p2->m)) * T;
+    p3->vx += ((-F32 * cosx32 - F13 * cosx13) / fabs(p3->m)) * T;
+    p3->vy += ((-F32 * cosy32 - F13 * cosy13) / fabs(p3->m)) * T;
+    p1->x += p1->vx * T;
+    p2->x += p2->vx * T;
+    p1->y += p1->vy * T;
+    p2->y += p2->vy * T;
+    p3->x += p3->vx * T;
+    p3->y += p3->vy * T;
+    //printf("1: %lg %lg",cos, sin (acos (cos)) );
+    //printf("1: x:%lg y:%lg vx:%lg vy:%lg ",F32 * cosx32, F13 * cosy13,F12 * cosy12, -F12 * cosy12 );
+    // printf("2: x:%lg y:%lg vx:%lg vy:%lg ", p2->x, p2->y, p2->vx, p2->vy );
 }
 
 void Calc2 (planet* p1, planet* p2, char* screen, int w) {
-  screen[((int) (p1->y + 0.5)) * w + (int) (p1->x + 0.5)] = ' ';
-  screen[((int) (p2->y + 0.5)) * w + (int) (p2->x + 0.5)] = ' ';
-  float rr = (p2->x - p1->x) * (p2->x - p1->x) + (p2->y - p1->y) * (p2->y - p1->y);
-  float F = (G * p1->m * p2->m) / (rr);
-  //float F = (G * p1->m * p2->m) / (fabs(p1->vx) + fabs(p2->vx));
-  float cosx = (p2->x - p1->x) / sqrt(rr);
-  float cosy = (p2->y - p1->y) / sqrt(rr);
-  float Fx = F * cosx + 10000000;
-  float Fy = F * cosy;
-  p1->vx += (Fx / p1->m) * T;
-  p2->vx -= (Fx / p2->m) * T;
-  p1->vy += (Fy / p1->m) * T;
-  p2->vy -= (Fy / p2->m) * T;
-  p1->x += p1->vx * T;
-  p2->x += p2->vx * T;
-  p1->y += p1->vy * T;
-  p2->y += p2->vy * T;
-  //printf("1: %lg %lg",cos, sin (acos (cos)) );
-  // printf("1: x:%lg y:%lg vx:%lg vy:%lg ", p1->x, p1->y, p1->vx, p1->vy );
-  // printf("2: x:%lg y:%lg vx:%lg vy:%lg ", p2->x, p2->y, p2->vx, p2->vy );
+    screen[((int) (p1->y + 0.5)) * w + (int) (p1->x + 0.5)] = ' ';
+    screen[((int) (p2->y + 0.5)) * w + (int) (p2->x + 0.5)] = ' ';
+    float rr = (p2->x - p1->x) * (p2->x - p1->x) + (p2->y - p1->y) * (p2->y - p1->y);
+    float F = (G * p1->m * p2->m) / (rr);
+    //float F = (G * p1->m * p2->m) / (fabs(p1->vx) + fabs(p2->vx));
+    float cosx = (p2->x - p1->x) / sqrt(rr);
+    float cosy = (p2->y - p1->y) / sqrt(rr);
+    float Fx = F * cosx + 10000000;
+    float Fy = F * cosy;
+    p1->vx += (Fx / p1->m) * T;
+    p2->vx -= (Fx / p2->m) * T;
+    p1->vy += (Fy / p1->m) * T;
+    p2->vy -= (Fy / p2->m) * T;
+    p1->x += p1->vx * T;
+    p2->x += p2->vx * T;
+    p1->y += p1->vy * T;
+    p2->y += p2->vy * T;
+    //printf("1: %lg %lg",cos, sin (acos (cos)) );
+    // printf("1: x:%lg y:%lg vx:%lg vy:%lg ", p1->x, p1->y, p1->vx, p1->vy );
+    // printf("2: x:%lg y:%lg vx:%lg vy:%lg ", p2->x, p2->y, p2->vx, p2->vy );
 }
 
 void CalcCenter (planet p1, planet p2, planet p3, planet* c, char* screen, int w, int h) {
