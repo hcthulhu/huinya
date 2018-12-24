@@ -26,9 +26,9 @@ int main () {
     int w = win.ws_col;
     char* screen = (char*) calloc ( w * (h - 1) + 1, sizeof(char));
 
-    planet p1 = {70, 20, 600, 0, 100, 'O'};
-    planet p2 = {70 + 30*tan(PI/6), 50, -300, 600*cos(PI/6), 100, 'o'};
-    planet p3 = {70 - 30*tan(PI/6), 50, -300, -600*cos(PI/6), 100, '*'};
+    planet p1 = {70, 20, 600, 0, 150, 'O'};
+    planet p2 = {70 + 30*tan(PI/6), 50, -300, 600*cos(PI/6), 300, 'o'};
+    planet p3 = {70 - 30*tan(PI/6), 50, -300, -600*cos(PI/6), 200, '*'};
 
     // planet p1 = {120, 40, 0, 3000, 1200, 'O'};
     // planet p2 = {130, 40, 0, -1970, 1000, 'o'};
@@ -48,7 +48,7 @@ int main () {
         PrintState (&p2, screen, w, h, p2.dig);
         PrintState (&p3, screen, w, h, p3.dig);
         PrintState (&c, screen, w, h, c.dig);
-        if (i % (int)(1 / (100 * T)) == 0) {
+        if (i % (int)(1 / (1000 * T)) == 0) {
             puts (screen);
             //printf("%d\n", i);
             // printf("1: x:%lg y:%lg vx:%lg vy:%lg \n", p1.x, p1.y, p1.vx, p1.vy );
