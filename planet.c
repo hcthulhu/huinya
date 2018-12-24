@@ -1,16 +1,15 @@
 #include <stdio.h>
-#include <unistd.h>
 #include <stdlib.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <string.h>
 #include <math.h>
 
-const float G = 124707.658145, T = 0.000001, PI = 3.14159265358979323846;
+const double G = 124707.658145, T = 0.000001, PI = 3.14159265358979323846;
 const char TAIL = '.';
 
 typedef struct Point {
-    float x, y, vx, vy, m;
+    double x, y, vx, vy, m;
     char dig;
 } planet;
 
@@ -51,7 +50,7 @@ int main () {
         PrintState (&p3, screen, w, h, p3.dig);
         PrintState (&c, screen, w, h, c.dig);
 
-        if (i % (int)(1 / (1000 * T)) == 0) {
+        if (i % (int)(100 / (1000 * T)) == 0) {
             puts (screen);
             // printf("1: x:%lg y:%lg vx:%lg vy:%lg \n", p1.x, p1.y, p1.vx, p1.vy );
             // printf("2: x:%lg y:%lg vx:%lg vy:%lg \n", p2.x, p2.y, p2.vx, p2.vy );
@@ -71,19 +70,19 @@ void Calc3 (planet* p1, planet* p2, planet* p3, char* screen, int w, int h) {
     PrintState (p2, screen, w, h, TAIL);
     PrintState (p1, screen, w, h, TAIL);
     PrintState (p3, screen, w, h, TAIL);
-    float rr12 = (p2->x - p1->x) * (p2->x - p1->x) + (p2->y - p1->y) * (p2->y - p1->y);
-    float rr13 = (p3->x - p1->x) * (p3->x - p1->x) + (p3->y - p1->y) * (p3->y - p1->y);
-    float rr32 = (p2->x - p3->x) * (p2->x - p3->x) + (p2->y - p3->y) * (p2->y - p3->y);
-    float F12 = (G * p1->m * p2->m) /(rr12);
-    float F13 = (G * p1->m * p3->m) /(rr13);
-    float F32 = (G * p3->m * p2->m) /(rr32);
-    //float F = (G * p1->m * p2->m) / (fabs(p1->vx) + fabs(p2->vx));
-    float cosx12 = (p2->x - p1->x) / sqrt(rr12);
-    float cosx13 = (p3->x - p1->x) / sqrt(rr13);
-    float cosx32 = (p3->x - p2->x) / sqrt(rr32);
-    float cosy12 = (p2->y - p1->y) / sqrt(rr12);
-    float cosy13 = (p3->y - p1->y) / sqrt(rr13);
-    float cosy32 = (p3->y - p2->y) / sqrt(rr32);
+    double rr12 = (p2->x - p1->x) * (p2->x - p1->x) + (p2->y - p1->y) * (p2->y - p1->y);
+    double rr13 = (p3->x - p1->x) * (p3->x - p1->x) + (p3->y - p1->y) * (p3->y - p1->y);
+    double rr32 = (p2->x - p3->x) * (p2->x - p3->x) + (p2->y - p3->y) * (p2->y - p3->y);
+    double F12 = (G * p1->m * p2->m) /(rr12);
+    double F13 = (G * p1->m * p3->m) /(rr13);
+    double F32 = (G * p3->m * p2->m) /(rr32);
+    //double F = (G * p1->m * p2->m) / (fabs(p1->vx) + fabs(p2->vx));
+    double cosx12 = (p2->x - p1->x) / sqrt(rr12);
+    double cosx13 = (p3->x - p1->x) / sqrt(rr13);
+    double cosx32 = (p3->x - p2->x) / sqrt(rr32);
+    double cosy12 = (p2->y - p1->y) / sqrt(rr12);
+    double cosy13 = (p3->y - p1->y) / sqrt(rr13);
+    double cosy32 = (p3->y - p2->y) / sqrt(rr32);
     p1->vx += ((+F12 * cosx12 + F13 * cosx13) / fabs(p1->m)) * T;
     p2->vx += ((-F12 * cosx12 + F32 * cosx32) / fabs(p2->m)) * T;
     p1->vy += ((+F12 * cosy12 + F13 * cosy13) / fabs(p1->m)) * T;
@@ -104,13 +103,13 @@ void Calc3 (planet* p1, planet* p2, planet* p3, char* screen, int w, int h) {
 void Calc2 (planet* p1, planet* p2, char* screen, int w) {
     screen[((int) (p1->y + 0.5)) * w + (int) (p1->x + 0.5)] = ' ';
     screen[((int) (p2->y + 0.5)) * w + (int) (p2->x + 0.5)] = ' ';
-    float rr = (p2->x - p1->x) * (p2->x - p1->x) + (p2->y - p1->y) * (p2->y - p1->y);
-    float F = (G * p1->m * p2->m) / (rr);
-    //float F = (G * p1->m * p2->m) / (fabs(p1->vx) + fabs(p2->vx));
-    float cosx = (p2->x - p1->x) / sqrt(rr);
-    float cosy = (p2->y - p1->y) / sqrt(rr);
-    float Fx = F * cosx + 10000000;
-    float Fy = F * cosy;
+    double rr = (p2->x - p1->x) * (p2->x - p1->x) + (p2->y - p1->y) * (p2->y - p1->y);
+    double F = (G * p1->m * p2->m) / (rr);
+    //double F = (G * p1->m * p2->m) / (fabs(p1->vx) + fabs(p2->vx));
+    double cosx = (p2->x - p1->x) / sqrt(rr);
+    double cosy = (p2->y - p1->y) / sqrt(rr);
+    double Fx = F * cosx + 10000000;
+    double Fy = F * cosy;
     p1->vx += (Fx / p1->m) * T;
     p2->vx -= (Fx / p2->m) * T;
     p1->vy += (Fy / p1->m) * T;
