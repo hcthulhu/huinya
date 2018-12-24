@@ -5,7 +5,7 @@
 #include <string.h>
 #include <math.h>
 
-const double G = 124707.658145, T = 0.000001, PI = 3.14159265358979323846;
+const double G = 124707.658145, T = 0.0000001, PI = 3.14159265358979323846;
 const char TAIL = '.';
 
 typedef struct Point {
@@ -41,7 +41,6 @@ int main () {
     printf("\n");
 
     for (int i = 0; ; i++) {
-
         //Calc2 (&p1, &p2, screen, w);
         Calc3 (&p1, &p2, &p3, screen, w, h);
         CalcCenter (p1, p2, p3, &c, screen, w, h);
@@ -49,19 +48,14 @@ int main () {
         PrintState (&p2, screen, w, h, p2.dig);
         PrintState (&p3, screen, w, h, p3.dig);
         PrintState (&c, screen, w, h, c.dig);
-
-        if (i % (int)(100 / (1000 * T)) == 0) {
+        if (i % (int)(1 / (100 * T)) == 0) {
             puts (screen);
+            //printf("%d\n", i);
             // printf("1: x:%lg y:%lg vx:%lg vy:%lg \n", p1.x, p1.y, p1.vx, p1.vy );
             // printf("2: x:%lg y:%lg vx:%lg vy:%lg \n", p2.x, p2.y, p2.vx, p2.vy );
             // printf("3: x:%lg y:%lg vx:%lg vy:%lg \n", p3.x, p3.y, p3.vx, p3.vy );
             usleep (50000);
-
-    }
-    //write (1, screen, w * (h - 1) + 1);
-
-
-    //printf("%d",i);
+        }
     }
     return 0;
 }
@@ -76,7 +70,6 @@ void Calc3 (planet* p1, planet* p2, planet* p3, char* screen, int w, int h) {
     double F12 = (G * p1->m * p2->m) /(rr12);
     double F13 = (G * p1->m * p3->m) /(rr13);
     double F32 = (G * p3->m * p2->m) /(rr32);
-    //double F = (G * p1->m * p2->m) / (fabs(p1->vx) + fabs(p2->vx));
     double cosx12 = (p2->x - p1->x) / sqrt(rr12);
     double cosx13 = (p3->x - p1->x) / sqrt(rr13);
     double cosx32 = (p3->x - p2->x) / sqrt(rr32);
@@ -97,7 +90,7 @@ void Calc3 (planet* p1, planet* p2, planet* p3, char* screen, int w, int h) {
     p3->y += p3->vy * T;
     //printf("1: %lg %lg",cos, sin (acos (cos)) );
     //printf("1: x:%lg y:%lg vx:%lg vy:%lg ",F32 * cosx32, F13 * cosy13,F12 * cosy12, -F12 * cosy12 );
-    // printf("2: x:%lg y:%lg vx:%lg vy:%lg ", p2->x, p2->y, p2->vx, p2->vy );
+    //printf("2: x:%lg y:%lg vx:%lg vy:%lg ", p2->x, p2->y, p2->vx, p2->vy );
 }
 
 void Calc2 (planet* p1, planet* p2, char* screen, int w) {
@@ -105,7 +98,6 @@ void Calc2 (planet* p1, planet* p2, char* screen, int w) {
     screen[((int) (p2->y + 0.5)) * w + (int) (p2->x + 0.5)] = ' ';
     double rr = (p2->x - p1->x) * (p2->x - p1->x) + (p2->y - p1->y) * (p2->y - p1->y);
     double F = (G * p1->m * p2->m) / (rr);
-    //double F = (G * p1->m * p2->m) / (fabs(p1->vx) + fabs(p2->vx));
     double cosx = (p2->x - p1->x) / sqrt(rr);
     double cosy = (p2->y - p1->y) / sqrt(rr);
     double Fx = F * cosx + 10000000;
@@ -119,8 +111,8 @@ void Calc2 (planet* p1, planet* p2, char* screen, int w) {
     p1->y += p1->vy * T;
     p2->y += p2->vy * T;
     //printf("1: %lg %lg",cos, sin (acos (cos)) );
-    // printf("1: x:%lg y:%lg vx:%lg vy:%lg ", p1->x, p1->y, p1->vx, p1->vy );
-    // printf("2: x:%lg y:%lg vx:%lg vy:%lg ", p2->x, p2->y, p2->vx, p2->vy );
+    //printf("1: x:%lg y:%lg vx:%lg vy:%lg ", p1->x, p1->y, p1->vx, p1->vy );
+    //printf("2: x:%lg y:%lg vx:%lg vy:%lg ", p2->x, p2->y, p2->vx, p2->vy );
 }
 
 void CalcCenter (planet p1, planet p2, planet p3, planet* c, char* screen, int w, int h) {
