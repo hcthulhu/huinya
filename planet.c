@@ -5,7 +5,7 @@
 #include <string.h>
 #include <math.h>
 
-const double G = 124707.658145, T = 0.0000001, PI = 3.14159265358979323846;
+const double G = 124707.658145, T = 0.00000001, PI = 3.14159265358979323846;
 const char TAIL = '.';
 
 typedef struct Point {
@@ -26,9 +26,9 @@ int main () {
     int w = win.ws_col;
     char* screen = (char*) calloc ( w * (h - 1) + 1, sizeof(char));
 
-    planet p1 = {70, 20, 600, 0, 150, 'O'};
-    planet p2 = {70 + 30*tan(PI/6), 50, -300, 600*cos(PI/6), 300, 'o'};
-    planet p3 = {70 - 30*tan(PI/6), 50, -300, -600*cos(PI/6), 200, '*'};
+    planet p1 = {70, 40, 0, 0, 10000, 'O'};
+    planet p2 = {70, 80, -5000, 0, 50, 'o'};
+    planet p3 = {70, 85, -5500, 0, 5, '*'};
 
     // planet p1 = {120, 40, 0, 3000, 1200, 'O'};
     // planet p2 = {130, 40, 0, -1970, 1000, 'o'};
