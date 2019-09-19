@@ -18,10 +18,10 @@ int main () {
     int w = win.ws_col;
     int step = 1;
 
-    ant m1 = {80, 30, 0};
+    ant m1 = {84, 30, 0};
     ant m2 = {81, 30, 1};
-    ant m3 = {81, 31, 2};
-    //ant m4 = {80, 31, 3};
+    ant m3 = {83, 31, 2};
+    ant m4 = {80, 31, 3};
     char* screen = (char*) calloc ( w * (h - 1) + 1, sizeof(char));
     for (int i = 0; i < w * (h - 1); i++)
     screen[i] = ' ';
@@ -31,12 +31,12 @@ int main () {
         mur (&m1, &screen[m1.y * w + m1.x]);
         mur (&m2, &screen[m2.y * w + m2.x]);
         mur (&m3, &screen[m3.y * w + m3.x]);
-        //mur (&m4, &screen[m4.y * w + m4.x]);
+        mur (&m4, &screen[m4.y * w + m4.x]);
 
         puts (screen);
         printf("step = %d\n", step);
         step++;
-        usleep (100000);
+        usleep (5000);
     }
     return 0;
 }
