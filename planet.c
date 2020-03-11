@@ -5,7 +5,7 @@
 #include <string.h>
 #include <math.h>
 
-const double G = 124707.658145, T = 0.00000001, PI = 3.14159265358979323846;
+const double G = 124707.658145, T = 0.000001, PI = 3.14159265358979323846;
 const char TAIL = '.';
 
 typedef struct Point {
@@ -43,12 +43,12 @@ int main () {
     for (int i = 0; ; i++) {
         //Calc2 (&p1, &p2, screen, w);
         Calc3 (&p1, &p2, &p3, screen, w, h);
-        CalcCenter (p1, p2, p3, &c, screen, w, h);
+        //CalcCenter (p1, p2, p3, &c, screen, w, h);
         PrintState (&p1, screen, w, h, p1.dig);
         PrintState (&p2, screen, w, h, p2.dig);
         PrintState (&p3, screen, w, h, p3.dig);
         PrintState (&c, screen, w, h, c.dig);
-        if (i % (int)(1 / (1000 * T)) == 0) {
+        if (i % (int)(1 / (10000 * T)) == 0) {
             puts (screen);
             //printf("%d\n", i);
             // printf("1: x:%lg y:%lg vx:%lg vy:%lg \n", p1.x, p1.y, p1.vx, p1.vy );
